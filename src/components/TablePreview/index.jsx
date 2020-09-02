@@ -1,11 +1,9 @@
-import React from 'react';
+import React from "react";
 import moment from "moment";
-import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 
-const TablePreview = ({sheetHeader, sheetData}) => {
+const TablePreview = ({ sheetHeader, sheetData }) => {
+
   const renderTablePreview = () => {
     let thead =
       sheetHeader &&
@@ -33,31 +31,15 @@ const TablePreview = ({sheetHeader, sheetData}) => {
       });
 
     return (
-      <>
-        {sheetHeader && sheetData && (
-          <>
-            <Row>
-              <Col>
-                <h3>Table preview</h3>
-              </Col>
-              <Col>
-                <Button>
-                  See Organitation chart
-                </Button>
-              </Col>
-            </Row>
-            <Table striped bordered hover>
-              <thead>
-                <tr>{thead}</tr>
-              </thead>
-              <tbody>{tbody}</tbody>
-            </Table>
-          </>
-        )}
-      </>
+        <Table striped bordered hover>
+          <thead>
+            <tr>{thead}</tr>
+          </thead>
+          <tbody>{tbody}</tbody>
+        </Table>
     );
   };
-  return(renderTablePreview())
+  return renderTablePreview();
 };
 
 export default TablePreview;
