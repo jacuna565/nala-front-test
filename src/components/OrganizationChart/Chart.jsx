@@ -12,6 +12,66 @@ const Chart = ({ staff, sheetData, monthSelected, sheetHeader }) => {
     staff && renderStaff();
   }, [staff]);
 
+  const getSubordinates = (subordinates) => {
+    return (
+      <Row>
+        {subordinates.length > 0 ? (
+          subordinates.map((element, index) => {
+            let lider = (
+              <Col key={index} xs={12 / subordinates.length}>
+                <p className="staff-name">{element.lider[sheetHeader[1]]}</p>
+                <p className="staff-area">
+                  {element.lider["Area"]} / {element.lider["Subarea"]}
+                </p>
+                <p className="staff-area">{element.lider[sheetHeader[4]]}</p>
+                <p className="staff-area">{element.lider[sheetHeader[9]]}</p>
+                <p className="staff-badge-pay">
+                  {findSalaryRaise(element.lider) ? (
+                    <Badge variant="success">Pay Rise</Badge>
+                  ) : (
+                    ""
+                  )}
+                </p>
+                <p className="staff-badge-hire">
+                  {findNewEmployee(element.lider) ? (
+                    <Badge variant="warning">New Hiring</Badge>
+                  ) : (
+                    ""
+                  )}
+                </p>
+                {element.subordinates && getSubordinates(element.subordinates)}
+              </Col>
+            );
+            return lider;
+          })
+        ) : (
+          <Col>
+            <p className="staff-name">{subordinates.lider[sheetHeader[1]]}</p>
+            <p className="staff-area">
+              {subordinates.lider["Area"]} / {subordinates.lider["Subarea"]}
+            </p>
+            <p className="staff-area">{subordinates.lider[sheetHeader[4]]}</p>
+            <p className="staff-area">{subordinates.lider[sheetHeader[9]]}</p>
+            <p className="staff-badge-pay">
+              {findSalaryRaise(subordinates.lider) ? (
+                <Badge variant="success">Pay Rise</Badge>
+              ) : (
+                ""
+              )}
+            </p>
+            <p className="staff-badge-hire">
+              {findNewEmployee(subordinates.lider) ? (
+                <Badge variant="warning">New Hiring</Badge>
+              ) : (
+                ""
+              )}
+            </p>
+          </Col>
+        )}
+      </Row>
+    );
+  };
+
   const renderStaff = () => {
     let subordinates = [];
     let data = [];
@@ -28,89 +88,78 @@ const Chart = ({ staff, sheetData, monthSelected, sheetHeader }) => {
       });
     });
 
-    console.log(data);
-    console.log('find lider as subordinate')
-    data.forEach(item => {
-      item.subordinates.forEach(element => {
-        data.forEach(el => {
-          if(el.lider[sheetHeader[2]] === element[sheetHeader[2]]){
-            console.log('es subordinado',el.lider)
-            console.log('de',item.lider)
-            
-          }
-        })
-        
-      })
-    })
+    let newObjectArray = {};
+    let newSubordinates = [];
+    let newSubordinates_lvl2 = [];
+    data.forEach((item) => {
+      item.subordinates.length > 0 &&
+        item.subordinates.forEach((element) => {
 
-    let allCardsStaff = data.map((item, index) => {
-      let subordinates = (
-        <Row key={index}>
-          {item.subordinates.map((element, index) => {
-            return (
-              <Col key={index}>
-                <p className="staff-name">{element[sheetHeader[1]]}</p>
-                <p className="staff-area">
-                  {element["Area"]} / {element["Subarea"]}
-                </p>
-                <p className="staff-area">{element[sheetHeader[4]]}</p>
-                <p className="staff-area">{element[sheetHeader[9]]}</p>
-                <p className="staff-badge-pay">
-                  {findSalaryRaise(element) ? (
-                    <Badge variant="success">Pay Rise</Badge>
-                  ) : (
-                    ""
-                  )}
-                </p>
-                <p className="staff-badge-hire">
-                  {findNewEmployee(element) ? (
-                    <Badge variant="warning">New Hiring</Badge>
-                  ) : (
-                    ""
-                  )}
-                </p>
-              </Col>
-            );
-          })}
-        </Row>
-      );
-      return (
-        <>
-          {item.subordinates.length !== 0 &&(
-            <Row>
-              <Col key={index}>
-                <p className="staff-name">{item.lider[sheetHeader[1]]}</p>
-                <p className="staff-area">
-                  {item.lider["Area"]} / {item.lider["Subarea"]}
-                </p>
-                <p className="staff-area">{item.lider[sheetHeader[4]]}</p>
-                <p className="staff-area">{item.lider[sheetHeader[9]]}</p>
-                <p className="staff-badge-pay">
-                  {findSalaryRaise(item.lider) ? (
-                    <Badge variant="success">Pay Rise</Badge>
-                  ) : (
-                    ""
-                  )}
-                </p>
-                <p className="staff-badge-hire">
-                  {findNewEmployee(item.lider) ? (
-                    <Badge variant="warning">New Hiring</Badge>
-                  ) : (
-                    ""
-                  )}
-                </p>
-              </Col>
-            </Row>
-          )}
+          data.forEach((el) => {
+            if (el.lider[sheetHeader[2]] === element[sheetHeader[2]]) {
 
-          {subordinates}
-        </>
-      );
+              if (_.isEmpty(newObjectArray)) {
+                newObjectArray.lider = item.lider;
+                newSubordinates.push({
+                  lider: el.lider,
+                });
+                newObjectArray.subordinates = newSubordinates;
+              } else {
+                if (newObjectArray.lider === item.lider) {
+                  newSubordinates.push({
+                    lider: el.lider,
+                  });
+                  newObjectArray.subordinates = newSubordinates;
+                } else {
+                  newObjectArray.subordinates.forEach((subord, index) => {
+                    if (subord.lider === item.lider) {
+                      newSubordinates_lvl2.push({
+                        lider: el.lider,
+                      });
+                      subord.subordinates = newSubordinates_lvl2;
+                    }
+                  });
+                }
+              }
+            }
+          });
+        });
     });
+
+    let organizationChart = (
+      <>
+        <Row>
+          <Col>
+            <p className="staff-name">{newObjectArray.lider[sheetHeader[1]]}</p>
+            <p className="staff-area">
+              {newObjectArray.lider["Area"]} / {newObjectArray.lider["Subarea"]}
+            </p>
+            <p className="staff-area">{newObjectArray.lider[sheetHeader[4]]}</p>
+            <p className="staff-area">{newObjectArray.lider[sheetHeader[9]]}</p>
+            <p className="staff-badge-pay">
+              {findSalaryRaise(newObjectArray.lider) ? (
+                <Badge variant="success">Pay Rise</Badge>
+              ) : (
+                ""
+              )}
+            </p>
+            <p className="staff-badge-hire">
+              {findNewEmployee(newObjectArray.lider) ? (
+                <Badge variant="warning">New Hiring</Badge>
+              ) : (
+                ""
+              )}
+            </p>
+          </Col>
+        </Row>
+        {newObjectArray.subordinates &&
+          getSubordinates(newObjectArray.subordinates)}
+      </>
+    );
     setStaffCard(
       <div data-testid="chart-container">
         <h3 className="title">Salaries paid this month: {calculateSalary()}</h3>
-        {allCardsStaff}
+        {organizationChart}
       </div>
     );
   };
