@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import InputFile from "./components/InputFile";
+import TablePreview from "./components/TablePreview";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [sheetData, setSheetData] = useState();
+  const [sheetHeader, setSheetHeader] = useState([]);
+
+  useEffect(() => {
+    if (sheetData !== undefined) {
+      setSheetHeader(Object.keys(sheetData[0].data[0]));
+    }
+  }, [sheetData]);
+
+  const handleSheetData = (data) => {
+    setSheetData(data)
+  };    
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Row>
+        <Col xs={12}>
+          <InputFile setData={handleSheetData} label="Pick the Excel file"/>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12}>
+          <TablePreview sheetHeader={sheetHeader} sheetData={sheetData}/></Col>
+      </Row>
+    </Container>
   );
-}
+};
 
 export default App;
