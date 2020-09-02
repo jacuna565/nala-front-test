@@ -39,7 +39,7 @@ const App = () => {
   };
 
   return (
-    <Container>
+    <Container data-testid="app-container">
       <Row>
         <Col xs={12}>
           <InputFile setData={handleSheetData} label="Pick the Excel file" />

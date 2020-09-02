@@ -31,7 +31,7 @@ const TablePreview = ({ sheetHeader, sheetData }) => {
       });
 
     return (
-        <Table striped bordered hover>
+        <Table data-testid="table-container" striped bordered hover>
           <thead>
             <tr>{thead}</tr>
           </thead>

@@ -26,7 +26,8 @@ const InputFile = ({setData, label}) => {
   };
 
   return(
-    <Form.File
+    <Form.File data-testid="input-container"
+      id="label-test"
       label={label}
       custom
       onChange={handleInputChange}

@@ -20,7 +20,7 @@ const OrganizationChart = ({groupedByMonth, sheetData, sheetHeader}) => {
 
   const getOptionsPicker = () => {
     let options = [];
-    groupedByMonth.forEach((item, index) => {
+    groupedByMonth && groupedByMonth.forEach((item, index) => {
       index === 0 && setMonthSelected(item.month)
       options.push(
         <option key={index} value={item.month}>
@@ -46,7 +46,7 @@ const OrganizationChart = ({groupedByMonth, sheetData, sheetHeader}) => {
 
   return(
     <>
-      <Row>
+      <Row data-testid="organization-container">
         <Col xs={12} sm={12} md={3}>
           <Form.Group controlId="SelectCustom">
             <Form.Label>Filter by month</Form.Label>
@@ -61,7 +61,7 @@ const OrganizationChart = ({groupedByMonth, sheetData, sheetHeader}) => {
           </Form.Group>
         </Col>
       </Row>
-      {<Chart staff={staff} sheetData={sheetData[0].data} monthSelected={monthSelected} sheetHeader={sheetHeader}/>}
+      {<Chart staff={staff} sheetData={sheetData && sheetData[0].data} monthSelected={monthSelected} sheetHeader={sheetHeader}/>}
     </>
   )
 };

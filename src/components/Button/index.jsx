@@ -7,7 +7,7 @@ const ButtonComponent = ({text, onClick}) => {
   }
 
   return(
-    <Button onClick={handleOnClick}>
+    <Button onClick={handleOnClick} data-testid="button-container">
       {text}
     </Button>
   )

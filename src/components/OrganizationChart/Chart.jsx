@@ -108,7 +108,7 @@ const Chart = ({ staff, sheetData, monthSelected, sheetHeader }) => {
       );
     });
     setStaffCard(
-      <div>
+      <div data-testid="chart-container">
         <h3 className="title">Salaries paid this month: {calculateSalary()}</h3>
         {allCardsStaff}
       </div>
